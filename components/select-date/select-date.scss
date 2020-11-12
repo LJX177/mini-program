@@ -1,0 +1,69 @@
+/* componentes/select-date/select-date.wxss */
+@import "../../common.scss";
+.component-select-date {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 2;
+  .map-con {
+    margin-top: 100rpx;
+    .weekdays-list {
+      .weekday {
+        font-size: 24rpx;
+      }
+    }
+  }
+
+  .weekdays-list {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 40rpx;
+    margin: 20rpx 0;
+
+    .weekday {
+      font-size: 30rpx;
+      text-align: center;
+      width: 14.28%;
+      line-height: 80rpx;
+
+      &.disable {
+        color: #eee;
+      }
+
+      &.selected {
+        background-color: $mainColor;
+        color: #fff;
+      }
+    }
+  }
+
+  .weekdays-list-sticky {
+    position: fixed;
+    width: 670rpx;
+    background: #fff;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+
+    .weekday {
+      line-height: 100rpx;
+    }
+  }
+
+  .year-month-title {
+    font-size: 30rpx;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+    line-height: 80rpx;
+  }
+}
+
+.iphonex-fix {
+  padding-bottom: 50rpx;
+}

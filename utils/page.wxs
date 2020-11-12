@@ -1,0 +1,792 @@
+var transStringToDate = function (dateStr) {
+  if (!dateStr) {
+    return false;
+  }
+  var dateArr = dateStr.split("-");
+  var year = parseInt(dateArr[0]);
+  var month = parseInt(dateArr[1]) - 1;
+  var day = parseInt(dateArr[2]);
+  return getDate(year, month, day);
+};
+
+module.exports = {
+  rmYear: function (dateStr) {
+    if (!dateStr) {
+      return "";
+    }
+    var dateArr = dateStr.split("-");
+    var monthStr = "0" + parseInt(dateArr[1]);
+    var dayStr = "0" + parseInt(dateArr[2]);
+    return (
+      monthStr.substring(monthStr.length - 2) +
+      "月" +
+      dayStr.substring(dayStr.length - 2) +
+      "日"
+    );
+  },
+  /***
+   * 格式化客房我的订单时间 
+   * params 2020-07-07
+   * **/
+  layoutDate: function (dateStr) {
+    if (!dateStr) {
+      return "";
+    }
+    var dateArr = dateStr.split("-");
+    var year = parseInt(dateArr[0]);
+    var monthStr = "0" + parseInt(dateArr[1]);
+    var dayStr = "0" + parseInt(dateArr[2]);
+    return (
+      year +
+      "." +
+      monthStr.substring(monthStr.length - 2) +
+      "." +
+      dayStr.substring(dayStr.length - 2)
+    );
+  },
+
+  getTimeForDate: function (dateStr) {
+    var date = transStringToDate(dateStr);
+    if (date) {
+      return date.getTime();
+    }
+    return false;
+  },
+
+  getDay: function (dateStr) {
+    var dateArr = dateStr.split("-");
+    var dayStr = parseInt(dateArr[2]);
+    return dayStr;
+  },
+  getMonth: function (dateStr) {
+    var dateArr = dateStr.split("-");
+    var monthStr = parseInt(dateArr[1]);
+    return monthStr;
+  },
+  getDayOfWeek: function (dateStr) {
+    if (!dateStr) return "";
+    var date = transStringToDate(dateStr);
+    var dayOfWeekArr = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+    return dayOfWeekArr[date.getDay()];
+  },
+  transStringToDate: transStringToDate,
+  computeIntervalOfDays: function (sDateStr, eDateStr) {
+    var sDate = transStringToDate(sDateStr);
+    var eDate = transStringToDate(eDateStr);
+    var sTime = sDate.getTime();
+    var eTime = eDate.getTime();
+    return (eTime - sTime) / (1000 * 60 * 60 * 24);
+  },
+  formatDate: function (dateStr) {
+    if (!dateStr) {
+      return "";
+    }
+    var reg = getRegExp("-", "g");
+    return dateStr.replace(reg, ".");
+  },
+  // 时间截取
+  formatDateRemoveSecond: function (dateStr) {
+    if (!dateStr) {
+      return "";
+    }
+    var reg = getRegExp("-", "g");
+    return dateStr.slice(0, -3).replace(reg, ".");
+  },
+  transCouponType: function (type) {
+    type = type.toString();
+    var CouponTypeConfig = {
+      "1": "满减券",
+      "2": "折扣券",
+      "3": "立减券",
+    };
+    return CouponTypeConfig[type] ? CouponTypeConfig[type] : "";
+  },
+  transCouponSort: function (sort) {
+    sort = sort.toString();
+    var CouponSortConfig = {
+      "1": "仅限客房使用",
+      "2": "仅限商城使用",
+      "3": "电子券",
+      "4": "仅限餐饮使用",
+      "5": "全场通用",
+      "6": "仅限公区使用",
+    };
+    return CouponSortConfig[sort] ? CouponSortConfig[sort] : "";
+  },
+  transOrderStatus: function (status) {
+    if (!status) {
+      return "";
+    }
+    status = status.toString();
+    var statusConfig = {
+      "1": "新建订单",
+      "2": "自动确认",
+      "3": "订单更新",
+      "4": "酒店确认",
+      "5": "酒店取消",
+      "6": "用户取消",
+    };
+    return statusConfig[status] ? statusConfig[status] : "";
+  },
+  transVerifyStatus: function (status) {
+    if (!status) {
+      return "";
+    }
+    status = status.toString();
+    var statusConfig = {
+      "1": "未审核",
+      "2": "未入住",
+      "3": "已取消",
+      "4": "no show",
+      "5": "已入住",
+      "6": "已离店",
+    };
+    return statusConfig[status] ? statusConfig[status] : "";
+  },
+  transPayStatus: function (status) {
+    return parseInt(status) ? "已支付" : "未支付";
+  },
+  transPaymentType: function (type) {
+    if (!type) {
+      return "";
+    }
+    type = type.toString();
+    var PaymentTypeConfig = {
+      "1": "到付",
+      "3": "支付宝支付",
+      "5": "微信支付",
+    };
+    return PaymentTypeConfig[type] ? PaymentTypeConfig[type] : "";
+  },
+  inArr: function (value, arr, toString) {
+    if (typeof arr != "object") return false;
+    if (toString) {
+      value = value.toString();
+    }
+    return arr.indexOf(value) > -1;
+  },
+  getDiscount: function (coupon) {
+    if (!coupon.discount || !coupon.type) {
+      return "0";
+    }
+    if (coupon.type == 2) {
+      return coupon.discount / 10;
+    }
+    return coupon.discount;
+  },
+  transTurntalbeColor: function (index, count) {
+    console.log(index, count);
+    if (count % 2 == 0) {
+      return index % 2 > 0 ? "#fed077" : "#ff8584";
+    } else {
+      switch (index % 3) {
+        case 0:
+          return "#fff584";
+        case 1:
+          return "#fed077";
+        case 2:
+          return "#ff8584";
+      }
+    }
+  },
+  transBreakfirst: function (num) {
+    switch (num) {
+      case 0:
+        return "无";
+      case 1:
+        return "单";
+      case 2:
+        return "双";
+      default:
+        return "多";
+    }
+  },
+  /**
+   *  计算活动下单
+   * **/
+  computedActivePrice: function (price, discount) {
+    if (!discount) {
+      return price;
+    }
+    var totalPrice = 0;
+    totalPrice = Math.ceil(price * discount);
+    return totalPrice;
+  },
+  /*
+   * formatMoney(strNum)
+   * 功能：金额按千位逗号分割
+   */
+  formatMoney: function (num) {
+    if (!num) num = 0;
+    num = num.toString();
+    if (isNaN(num)) num = "0";
+    var sign = num == (num = Math.abs(num));
+    num = Math.floor(num * 100 + 0.50000000001);
+    // var cents = num % 100;
+    num = Math.floor(num / 100).toString();
+    // if (cents < 10) cents = "0" + cents;
+    for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+      num =
+        num.substring(0, num.length - (4 * i + 3)) +
+        "," +
+        num.substring(num.length - (4 * i + 3));
+
+    return (sign ? "" : "-") + num;
+  },
+  computeService: function (arr) {
+    var fee = 0;
+    for (var i = 0; i < arr.length; i++) {
+      fee += arr[i].price * arr[i].num;
+    }
+    return fee;
+  },
+  computeCart: function (goodsArr, checkedArr) {
+    var fee = 0;
+    for (var i = 0; i < checkedArr.length; i++) {
+      var index = parseInt(checkedArr[i]);
+      fee += goodsArr[index].goodPromotionPrice * goodsArr[index].cartNum;
+    }
+    // goodsArr.map(function(item) {
+    //   fee += item.goodPromotionPrice * item.cartNum
+    // })
+    return fee;
+  },
+
+  countFoodCart: function (cart) {
+    var num = 0;
+    for (var i = 0; i < cart.length; i++) {
+      num += cart[i].num;
+    }
+    return num;
+  },
+
+  computeFoodPrice: function (cart) {
+    var fee = 0;
+    for (var i = 0; i < cart.length; i++) {
+      // var index = parseInt(cart[i].index);
+      // if(!cart[index]) {
+      //   continue;
+      // }
+      fee += cart[i].price * cart[i].num;
+    }
+    return fee;
+  },
+
+  computeFoodCart: function (foodsList, cart) {
+    var fee = 0;
+    for (var i = 0; i < cart.length; i++) {
+      var index = parseInt(cart[i].index);
+      if (!foodsList[index] || !cart[index]) {
+        continue;
+      }
+      fee += foodsList[index].Promotion * cart[index].num;
+    }
+    return fee;
+  },
+  hasRooms: function (roomsList) {
+    if (typeof roomsList != "object") return false;
+    if (roomsList.length < 1) {
+      return false;
+    }
+    for (var i = 0; i < roomsList.length; i++) {
+      if (roomsList[i].Price.length > 0) {
+        return true;
+      }
+    }
+    return false;
+  },
+  getImgUrl: function (url) {
+    var testDomain = "https://dev.mp1.eworldsoft.com";
+    return testDomain + url;
+  },
+  // 优惠券
+  canUseCoupon: function (couponList, price) {
+    var canUse = false;
+    for (var i = 0; i < couponList.length; i++) {
+      var coupon = couponList[i];
+      if (price >= coupon.restrictions) {
+        canUse = true;
+        return true;
+      }
+    }
+    return canUse;
+  },
+  /**
+   *  图片地址拼接
+   * **/
+  getImgUrl: function (url) {
+    var testDomain = "https://dev.mp1.eworldsoft.com";
+    return testDomain + url;
+  },
+  /**
+   *  餐饮订单
+   * coffeeEquity 是否有免费coffee
+   * coffeeEquityId 免费coffee iD
+   * **/
+  computeFoodOrder: function (
+    cart,
+    discounts,
+    Freight,
+    giftData,
+    giftId,
+    showGiftLength,
+    type,
+    coffeeEquity,
+    coffeeEquityId
+  ) {
+    var total = 0;
+    for (var i = 0; i < cart.length; i++) {
+      total += parseInt(cart[i].Promotion) * cart[i].num; // 基准价
+    }
+
+    if (discounts.type) {
+      // 优惠券
+      if (discounts.type == 2) {
+        total = Math.ceil(total * (discounts.discount * 0.01));
+      } else {
+        total = Math.ceil(total - discounts.discount);
+      }
+    }
+
+    if (giftData) {
+      // 礼品券
+      for (var i = 0; i < cart.length; i++) {
+        if (cart[i].ID == giftId) {
+          total -= parseInt(cart[i].Promotion) * showGiftLength;
+        }
+      }
+    }
+
+    if (type == "2") {
+      // 运费
+      total += Freight;
+    }
+
+    if (coffeeEquity == 1) {
+      // 免费coffee券
+      for (var k = 0; k < cart.length; k++) {
+        if (coffeeEquityId == cart[k].ID) {
+          total = total - parseInt(cart[k].Price);
+        }
+      }
+    }
+    return total > 0 ? total : 0;
+  },
+  /**
+   * @params{} 工位下单
+   * goodsPrice  单价
+   * num  数量
+   * coupon 优惠券数量
+   * equity 折扣
+   * giftlength 礼品券长度
+   * days
+   * type 优惠券类型
+   * **/
+  computedDiscountCoupon: function (
+    goodsPrice,
+    num,
+    coupon,
+    equity,
+    giftlength,
+    days,
+    type
+  ) {
+    var totalPrice = 0;
+    totalPrice = goodsPrice * num * days;
+
+    if (equity) {
+      totalPrice = Math.ceil(equity * totalPrice);
+    }
+
+    if (coupon) {
+      if (type == 2) {
+        totalPrice = Math.ceil(totalPrice * (coupon * 0.01));
+      } else {
+        totalPrice = Math.ceil(totalPrice - coupon);
+      }
+    }
+
+    if (giftlength) {
+      totalPrice = Math.ceil(totalPrice - goodsPrice * giftlength);
+      return totalPrice > 0 ? totalPrice : 0;
+    }
+    return totalPrice > 0 ? totalPrice : 0;
+  },
+
+  /**
+   *  @params{}  会议室预订
+   *  goodsPrice   单价
+   *  num          数量
+   *  coupon,      优惠券
+   *  totalPrice   增值服务
+   *  discount     会员权益
+   * **/
+  computedMeetingCoupon: function (
+    goodsPrice,
+    // num,
+    coupon,
+    totalPrice,
+    discount,
+    type
+  ) {
+    var total = 0;
+    total = goodsPrice; // 基准价格
+
+    if (totalPrice) {
+      // 增值服务
+      total += totalPrice;
+    }
+
+    if (discount) {
+      // 会员权益
+      total = Math.ceil(total * discount);
+    }
+    if (coupon) {
+      // 优惠券
+      if (type == 2) {
+        total = Math.ceil(total * coupon);
+        console.log(total, "价钱")
+      } else {
+        total = Math.ceil(total - coupon);
+      }
+    }
+    return total > 0 ? total : 0;
+  },
+
+  /**
+   * coupon 优惠券
+   * equity 权益卡
+   * giftData 礼品券
+   * **/
+
+  // 计算总价
+  computeTotal: function (price, coupon, equity, giftData) {
+    var total = 0;
+    total += price;
+    if (coupon.type) {
+      // 优惠券
+      if (coupon.type == 2) {
+        total = Math.ceil(total * (coupon.discount * 0.01));
+      } else {
+        total = Math.ceil(total - coupon.discount);
+      }
+    }
+    if (equity) {
+      // 会员权益
+      total = Math.ceil(total * equity);
+      return false;
+    }
+    if (giftData) {
+      total = Math.ceil(total - giftData);
+    }
+    return total > 0 ? total : 0;
+  },
+
+  /**
+   * 计算商城价格
+   * goodsArr 商品单价 数量
+   * equity 会员卡
+   * discounts 优惠券
+   * Freight 运费
+   * result 类型
+   * **/
+
+  computeOrder: function (goodsArr, discounts, freight, result, equity) {
+    var total;
+    var freight = freight ? freight : 0;
+    var result = result.toString();
+    var grossPrice = 0;
+
+    goodsArr.map(function (item) {
+      // 商品价格
+      grossPrice += item.goodPromotionPrice * item.cartNum;
+    });
+
+    if (discounts) {
+      // 优惠券
+      if (discounts.type == 2) {
+        grossPrice = Math.ceil(grossPrice * discounts.discount * 0.01);
+        return total;
+      } else {
+        grossPrice = Math.ceil(grossPrice - discounts.discount);
+      }
+    }
+    if (equity) {
+      // 会员权益
+      grossPrice = Math.ceil(grossPrice * equity);
+    }
+
+    if (result == "1") {
+      // 运费
+      grossPrice += freight;
+    }
+
+    return grossPrice;
+  },
+
+  /**
+   *   我的订单 图片状态
+   * **/
+  computedImage: function (order, type) {
+    type = type.toString();
+    var orderImage = {
+      "0": order.imgPath, // 客房订单
+      "1": order.activity_pic_url_string, // 活动订单
+      "2": order.order_imgPath, // 美食订单
+      "3": order.store_pic_url_string, // 美食订单
+      "4": order.point_pic_url_string, // 积分兑换
+      "5": order.station_images, // 工位订单
+      "6": order.meeting_images, // 会议订单
+    };
+    return orderImage[type] ? orderImage[type] : orderImage["0"];
+  },
+
+  
+  /**
+   *  @params{type} 我的订单 订单时间
+   * **/
+  computedOrderDate: function (order, type) {
+    var order;
+    type = type.toString();
+    var orderType = {
+      "0": order.CreateTime, // 客房订单
+      "1": order.CreateTime, // 活动订单
+      "2": order.order_CreateTime, // 餐饮美食
+      "3": order.ModifyTime, // 商城订单
+      "4": order.CreateTime, // 积分兑换
+      "5": order.created_at, // 工位订单
+      "6": order.created_at, // 会议室订单
+    };
+    return orderType[type] ? orderType[type] : orderType["0"];
+  },
+
+  /**
+   *  @params{type} 我的订单  订单编号
+   * **/
+  computedOrderNum: function (order, type) {
+    type = type.toString();
+    var orderNumber = {
+      "0": order.ID, // 客房订单
+      "1": order.ID, // 活动列表
+      "2": order.ID, // 餐饮美食
+      "3": order.ID, // 商城订单
+      "4": order.ID, // 积分兑换
+      "5": order.order_id, // 工位订单
+      "6": order.id, // 会议室订单
+    };
+    return orderNumber[type] ? orderNumber[type] : orderNumber["0"];
+  },
+  /**
+   * @params{type} 我的订单 立即支付
+   * **/
+  computedToPay: function (order, type) {
+    // "room", "active","cate","store","group","rush","point","station","meeting",
+    type = type.toString();
+    var immediatePayment = {
+      "0": order.PayStatus == 0 && order.OrderStatus == 1, // 客房订单
+      "1": order.PayStatus == 0 && order.Status == 1, // 活动订单
+      "2": order.PaymentStatus == "0" && order.Status == 1, // 餐饮美食
+      "3": order.PaymentStatus == 0 && order.Status == 1, // 商城订单
+      "4": order.PaymentStatus == 0 && order.Status == 1, // 积分订单
+      "5": order.payment_status == 0 && order.order_status == 1, // 工位订单
+      "6": order.payment_status == 0 && order.order_status == 1, // 会议室订单
+    };
+    return immediatePayment[type] ? immediatePayment[type] : immediatePayment["0"];
+  },
+
+  /**
+   *  @params{type} 我的订单  确认详情
+   * **/
+  computedAffirmOrder: function (order, type) {
+    type = type.toString();
+    var affirmOrder = {
+      "0": order.PayStatus == 1 && order.OrderStatus == 2, // 客房订单
+      "1": order.PaymentStatus == 1 && order.PayStatus == 1, // 活动订单
+      "2": order.PaymentStatus == "1", // 餐饮美食
+      "3": order.PaymentStatus == 1 && order.OrderStatus == 3, // 商城订单
+      "5": order.payment_status == 1 && order.order_status == 2 || order.payment_status == 1 && order.order_status == 4, // 工位预订
+      "6": order.payment_status == 1 && order.order_status == 1, // 会议室订单
+    };
+    return affirmOrder[type] ? affirmOrder[type] : affirmOrder["0"];
+  },
+
+  /**
+   *  @params{type} 我的订单  订单取消
+   * **/
+  computedOrderAbolish: function (order, type) {
+    type = type.toString();
+    var orderAbolish = {
+      // "0": order.PayStatus == 1 && order.refund == "0" || order.PayStatus == 0, // 客房下单
+      "0": order.PayStatus == 0 && order.OrderStatus == 6 
+        || order.PayStatus == 1 && order.OrderStatus == 6 
+        || order.PayStatus == 1 && order.OrderStatus == 5
+        || order.PayStatus == 0 && order.OrderStatus == 5,
+      "2": order.PaymentStatus == "0", // 餐饮美食
+      "3": order.PaymentStatus == 0, // 商城订单
+      "5": order.payment_status == 0 && order.order_status == 3 
+        || order.payment_status == 1 && order.order_status == 4 
+        || order.payment_status == 0 && order.order_status == 4, // 工位订单
+      "6": order.payment_status == 0 && order.order_status == 3 
+        || order.payment_status == 1 && order.order_status == 4 
+        || order.payment_status == 0 && order.order_status == 4 // 会议室订单
+    };
+    return orderAbolish[type] ? orderAbolish[type] : orderAbolish["0"];
+  },
+  /**
+   *  @params{type} 我的收藏 图片
+   * **/
+  computedCollectImage: function (type, item) {
+    type = type.toString();
+    var getImgUrl = "https://dev.mp1.eworldsoft.com";
+    var collectImage = {
+      "3": getImgUrl + item.CollectionInfo.ImgPath, // 餐饮美食
+      "4": item.CollectionInfo.pic_url_string, // 活动
+      "5": item.CollectionInfo.pic_url_string, // 商城
+      "6": item.CollectionInfo.pic_url_string, // 积分兑换
+      "7": item.CollectionInfo.thumb, // 公区
+    };
+    return collectImage[type] ? collectImage[type] : "";
+  },
+
+  /**
+   *   @params{type} 我的收藏 类型判断
+   * **/
+  opinionType: function (type) {
+    type = type.toString();
+    var mold = {
+      "0": "其他",
+      "3": "餐饮",
+      "4": "活动",
+      "5": "商城",
+      "6": "积分",
+      "7": "公区",
+    };
+    return mold[type] ? mold[type] : mold["0"];
+  },
+
+  /**
+   *  @params{type} 我的收藏 价格
+   * **/
+  collectImagePrice: function (type, item) {
+    type = type.toString();
+    var priceType = {
+      "3": item.CollectionInfo.Promotion, // 餐饮美食
+      "4": item.CollectionInfo.TotalPrice
+        ? "￥" + item.CollectionInfo.TotalPrice
+        : "免费", // 活动
+      "5": item.CollectionInfo.PromotionPrice
+        ? "￥" + item.CollectionInfo.PromotionPrice
+        : "￥0", // 商城
+      "6": item.CollectionInfo.NeedPoints
+        ? item.CollectionInfo.NeedPoints + "积分"
+        : "0" + "积分", // 积分兑换
+      "7": item.CollectionInfo.price
+        ? "￥" + item.CollectionInfo.price
+        : "免费", // 公区
+    };
+    return priceType[type] ? priceType[type] : "";
+  },
+
+  /**
+   * 显示购物车
+   * **/
+  // showCartIcon: function(isShow, NeedAddr) {
+  //   if(isShow) {
+  //     if(NeedAddr.indexOf('1') > -1) {
+
+  //     }
+  //   }
+  // },
+
+  /**
+   * @params{type} 我的收藏 原价
+   * **/
+  collectOriginalPrice: function (type, item) {
+    type = type.toString();
+    var priceType = {
+      "3": item.CollectionInfo.Price, // 餐饮美食 1
+      "4": item.CollectionInfo.TotalPrice
+        ? item.CollectionInfo.TotalPrice
+        : "0", // 活动 1
+      "5": item.CollectionInfo.Price, // 商城
+      "6": item.CollectionInfo.Price, // 积分兑换 1
+      "7": item.CollectionInfo.price, // 公区 1
+    };
+    return priceType[type] ? priceType[type] : "";
+  },
+
+  /**
+   *   个人中心  我的权益
+   * **/
+  computedColor: function (index) {
+    index = index.toString();
+    var indexType = {
+      VIP01: "level-name-1",
+      VIP02: "level-name-2",
+      VIP03: "level-name-2",
+      VIP04: "level-name-4",
+      VIP05: "level-name-5",
+    };
+    return indexType[index] ? indexType[index] : indexType["0"];
+  },
+
+  computedFontColor: function (index) {
+    index = index.toString();
+    var indexType = {
+      VIP01: "level",
+      VIP02: "level-1",
+      VIP03: "level-1",
+      VIP04: "level",
+      VIP05: "level",
+    };
+    return indexType[index] ? indexType[index] : indexType["0"];
+  },
+
+  /**
+   * 我的订单 是否支付
+   * **/
+  computedIsPay: function (index) {
+    console.log(index, "index");
+    index = index.toString();
+    var indexType = {
+      "0": order.PayStatus == 0 ? "未支付" : "已支付",
+      "2": order.PaymentStatus, // 餐饮美食
+      "3": order.PaymentStatus, // 商城订单
+      "5": order.PaymentStatus, // 工位订单
+      "6": order.PaymentStatus, // 会议室订单
+    };
+    return indexType[index] ? indexType[index] : indexType["0"];
+  },
+
+  /**
+   *  @params{type} 计算客房增值服务
+   * **/
+  computedRoomServicePrice: function (item) {
+    if(!item) {
+      return;
+    }
+    var totalPrice = 0;
+    for (var i = 0; i < item.length; i++) {
+      totalPrice += item[i].Amount * item[i].Price;
+    }
+    return totalPrice;
+  },
+
+  transSelectDateStatusForMeeting: function (date, index, selectDate) {
+    if (date.used == 1) {
+      return "disabled";
+    }
+    if (selectDate.indexOf(index) > -1) {
+      return "selected";
+    }
+  },
+
+  transSelectDateForMeeting: function (date, selectDate) {
+    if (selectDate.length < 1) {
+      return "请先选择时间";
+    }
+    var earliest = selectDate[0];
+    var latest = selectDate[selectDate.length - 1];
+    return date[earliest].startTime + "-" + date[latest].endTime;
+  },
+};

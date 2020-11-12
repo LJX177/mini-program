@@ -1,0 +1,17 @@
+<!-- componentes/select-date/select-date.wxml -->
+<view class="component-select-date" hidden="{{hidden}}">
+  <view class="weekdays-list weekdays-list-sticky">
+    <view class="weekday" wx:for="{{weeks}}" wx:key="index" data-idx="{{index}}">{{item}}</view>
+  </view>
+  <view class="map-con">
+    <block wx:for="{{mapOfDate}}" wx:key="index" wx:for-item="date">
+      <view class="year-month-title">{{date.yearMonthStr}}</view>
+      <view class="weekdays-list">
+        <view class="grid white-color weekday" wx:for="{{date.map.firstDayOfWeek}}" wx:key="index" data-idx="{{index}}"></view>
+        <view class="grid white-color weekday {{item==0?'disable':''}} {{item==2?'selected':''}}" wx:for="{{date.map.daysMap}}" wx:key="index" data-date="{{date.yearMonth+'-'+(index+1)}}" bindtap="selectDay">
+          {{index+1}}
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

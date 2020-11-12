@@ -1,0 +1,48 @@
+/* componentes/select-date/select-date.wxss */
+.component-select-date {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 2; }
+  .component-select-date .map-con {
+    margin-top: 100rpx; }
+    .component-select-date .map-con .weekdays-list .weekday {
+      font-size: 24rpx; }
+  .component-select-date .weekdays-list {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 40rpx;
+    margin: 20rpx 0; }
+    .component-select-date .weekdays-list .weekday {
+      font-size: 30rpx;
+      text-align: center;
+      width: 14.28%;
+      line-height: 80rpx; }
+      .component-select-date .weekdays-list .weekday.disable {
+        color: #eee; }
+      .component-select-date .weekdays-list .weekday.selected {
+        background-color: #ab5c57;
+        color: #fff; }
+  .component-select-date .weekdays-list-sticky {
+    position: fixed;
+    width: 670rpx;
+    background: #fff;
+    margin: 0;
+    border-bottom: 1px solid #ccc; }
+    .component-select-date .weekdays-list-sticky .weekday {
+      line-height: 100rpx; }
+  .component-select-date .year-month-title {
+    font-size: 30rpx;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-right: none;
+    line-height: 80rpx; }
+
+.iphonex-fix {
+  padding-bottom: 50rpx; }

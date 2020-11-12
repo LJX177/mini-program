@@ -1,0 +1,14 @@
+<view class="share-img-container" wx:if="{{showShareImg}}">
+  <painter customStyle='position: absolute; left: -9999rpx; top:-9999rpx;' palette="{{data}}" bind:imgOK="onImgOK" bind:imgErr="onImgErr" />
+  <view class="share-img-con">
+    <image src="{{path}}" wx:if="{{path}}" class="share-img" />
+    <button bindtap="saveImg" class="save-img">
+      <view class="icon icon-finger"></view>
+      点击保存图片
+    </button>
+    <view class="icon icon-close" bindtap="onCloseImg"></view>
+  </view>
+</view>
+<van-action-sheet show="{{ show }}" actions="{{ actions }}" bind:close="onClose" bind:select="onSelect" cancel-text="取消" bind:cancel="onClose" />
+<van-dialog id="van-dialog-share" />
+<view class=""></view>

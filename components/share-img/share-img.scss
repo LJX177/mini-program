@@ -1,0 +1,47 @@
+@import "./common.scss";
+@import "./icon.scss";
+
+.share-img-container {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba($lightColor, 0.8);
+  z-index: 8;
+  .share-img-con {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 995rpx;
+    width: 560rpx;
+    background: $lightColor;
+    box-shadow: 0 5rpx 32rpx 32rpx rgba(#9b9999, 0.3);
+    .share-img {
+      width: 560rpx;
+      height: 995rpx;
+    }
+  }
+  .save-img {
+    position: absolute;
+    bottom: -120rpx;
+    width: 560rpx;
+    margin: auto;
+    font-size: 28rpx;
+    color: #7c807f;
+  }
+  .icon-finger {
+    position: absolute;
+    top: 50%;
+    transform: translate(0,-50%);
+    left: 140rpx;
+  }
+  .icon-close {
+    position: absolute;
+    top: 20rpx;
+    right: 20rpx;
+    z-index: 2;
+  }
+}
+
